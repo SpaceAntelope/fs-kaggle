@@ -75,3 +75,4 @@ module Kaggle =
         let (AuthorizedClient client) = options.AuthorizedClient
 
         DownloadFileAsync url destinationFile client (options.CancellationToken) (options.ReportingCallback)
+

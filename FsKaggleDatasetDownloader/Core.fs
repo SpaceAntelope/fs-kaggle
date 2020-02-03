@@ -8,7 +8,6 @@ open FSharp.Control.Tasks.V2
 open System.Threading.Tasks
 
 module Core =
-
     type ReportingData =
         { Notes: string
           BytesRead: int64
