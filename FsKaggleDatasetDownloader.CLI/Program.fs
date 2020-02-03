@@ -9,7 +9,7 @@ module Program =
     open Argu
 
     let EnsureKaggleJsonExists path =
-        if path |> (File.Exists >> not) 
+        if path |> (File.Exists >> not)
         then failwithf "Could not locate credential file in path '%s'" path
         else path
 
@@ -41,6 +41,7 @@ module Program =
             results
             |> CLI.ParseOutputFolder
             |> CreateOutputFolderIfMissing
+
         let datasetInfo = results |> CLI.ParseDatasetInfo
         let overwriteEnabled = results |> CLI.ParseOverwrite
         let whatIfEnabled = results |> CLI.ParseWhatIf
@@ -48,13 +49,8 @@ module Program =
         if whatIfEnabled then
             0
         else
-            use client = new HttpClient()
-
             { DatasetInfo = datasetInfo
-              AuthorizedClient =
-                  kaggleJsonPath
-                  |> Credentials.LoadFrom
-                  |> Credentials.AuthorizeClient client
+              Credentials = Path kaggleJsonPath
               DestinationFolder = destinationFolder
               Overwrite = overwriteEnabled
               CancellationToken = None

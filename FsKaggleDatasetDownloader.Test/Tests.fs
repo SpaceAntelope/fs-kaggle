@@ -49,15 +49,58 @@ module Core =
         |> Async.AwaitTask
         |> Async.RunSynchronously
 
-        System.IO.File.WriteAllLines
-            ("output.txt",
-             reportResult
-             |> Seq.mapi (fun i info ->
-                 sprintf "%03d. %.2f%% @ %.2fMB/s\n%A\n" i (100.0 * float info.BytesRead / float info.TotalBytes)
-                     (info.BytesPerSecond / 1024.0) info))
-
         Assert.Equal(int64 payloadSize, memstr.Length)
         Assert.Equal(desiredSamples, reportResult.Count)
+
+    [<Fact>]
+    let ``DownloadStreamAsync Test Progress Reporting with Time interval at 10MB``() =
+
+        let payloadSize = 10_485_760 * 100
+
+        use message = new HttpResponseMessage(HttpStatusCode.OK)
+        message.Content <- new ByteArrayContent(Array.create<byte> payloadSize 1uy)
+       
+        let mockHandler =
+            { new System.Net.Http.HttpMessageHandler() with
+                member x.SendAsync(request, cancellationToken) = async { return message } |> Async.StartAsTask }
+
+        use client = new HttpClient(mockHandler)
+
+        use memstr = new MemoryStream()
+
+        let reportResult = ResizeArray<DateTime * ReportingData>()
+        let bufferSize = 128
+        let sampleInterval = Time <| TimeSpan.FromMilliseconds(200.0)
+
+        let report (info: ReportingData) =
+            reportResult.Add(DateTime.Now, info)
+
+        DownloadStreamAsync
+            { BufferLength = bufferSize
+              Url = "http://0.0.0.0"
+              Client = client
+              Token = Some(CancellationToken())
+              WriteAsync = memstr.WriteAsync
+              ReportOptions =
+                  Some
+                      { ReportTitle = "Test"
+                        SampleInterval = sampleInterval
+                        ReportCallback = report } }
+        |> Async.AwaitTask
+        |> Async.RunSynchronously
+
+        Assert.Equal(int64 payloadSize, memstr.Length)
+        Assert.True(reportResult.Count > 1)
+
+        let expectedInterval = 200.0
+
+        let actualInterval =
+            reportResult
+            |> Seq.map fst
+            |> Seq.pairwise
+            |> Seq.averageBy (fun (x, y) -> (y - x).TotalMilliseconds)
+
+        Assert.True(Math.Abs(actualInterval - expectedInterval) < 5.0)
 
     type DownloadFileTest(outputHelper: ITestOutputHelper) =
         let output = outputHelper
@@ -100,14 +143,24 @@ module Kaggle =
         [<Fact>]
         member x.``Load credentials from temporary file``() =
 
-            let creds = Credentials.LoadFrom tempPath
+            let creds = Credentials.LoadFromPath tempPath
+
+            Assert.Equal("areslazarus", creds.username)
+            Assert.Equal("1234567890abcdefghijklmnopqrstuv", creds.key)
+
+        [<Fact>]
+        member x.``Load credentials from string``() =
+            let creds =
+                tempPath
+                |> File.ReadAllText
+                |> Credentials.LoadFromString
 
             Assert.Equal("areslazarus", creds.username)
             Assert.Equal("1234567890abcdefghijklmnopqrstuv", creds.key)
 
         [<Fact>]
         member x.``Authorize http client for Kaggle API``() =
-            let creds = Credentials.LoadFrom tempPath
+            let creds = Credentials.LoadFromPath tempPath
 
             use client = new HttpClient()
 
@@ -174,10 +227,7 @@ module Kaggle =
                   { Owner = "TheDatasetOwner"
                     Dataset = "TheDataset"
                     Request = request }
-              AuthorizedClient =
-                  credentialsPath
-                  |> Credentials.LoadFrom
-                  |> Credentials.AuthorizeClient client
+              Credentials = Client client
               DestinationFolder = Path.GetTempPath()
               Overwrite = false
               CancellationToken = None
@@ -193,7 +243,7 @@ module Kaggle =
             use client = new HttpClient(handler)
 
             Filename "samples.csv"
-            |> datasetOptions client
+            |> datasetOptions (AuthorizedClient client)
             |> DownloadDatasetAsync
             |> Async.RunSynchronously
 
@@ -206,7 +256,7 @@ module Kaggle =
             use client = new HttpClient(handler)
 
             CompleteDatasetZipped
-            |> datasetOptions client
+            |> datasetOptions (AuthorizedClient client)
             |> DownloadDatasetAsync
             |> Async.RunSynchronously
 
@@ -258,29 +308,30 @@ module CLI =
         let results = ArgumentParser.Create<CLI.Args>().ParseCommandLine args
 
         let expected =
-                  { Owner = args.[0]
-                    Dataset = args.[1]
-                    Request = Filename args.[3] }
+            { Owner = args.[0]
+              Dataset = args.[1]
+              Request = Filename args.[3] }
 
-        let actual = ParseDatasetInfo results 
+        let actual = ParseDatasetInfo results
 
         Assert.Equal(expected, actual)
-        Assert.Equal("Data",ParseOutputFolder results)
+        Assert.Equal("Data", ParseOutputFolder results)
 
 
     [<Fact>]
     let ``Example: selfishgene historical-hourly-weather-data -f humidity.csv -o Data -c tempFile``() =
         let kagglePath = Path.GetTempFileName()
-        let args = [| "selfishgene"; "historical-hourly-weather-data";"-f";"humidity.csv";"-o";"Data";"-c";kagglePath |]
+        let args =
+            [| "selfishgene"; "historical-hourly-weather-data"; "-f"; "humidity.csv"; "-o"; "Data"; "-c"; kagglePath |]
         let results = ArgumentParser.Create<CLI.Args>().ParseCommandLine args
 
         let expected =
-                  { Owner = args.[0]
-                    Dataset = args.[1]
-                    Request = Filename args.[3] }
+            { Owner = args.[0]
+              Dataset = args.[1]
+              Request = Filename args.[3] }
 
-        let actual = ParseDatasetInfo results 
+        let actual = ParseDatasetInfo results
 
         Assert.Equal(expected, actual)
-        Assert.Equal("Data",ParseOutputFolder results)
+        Assert.Equal("Data", ParseOutputFolder results)
         Assert.Equal(kagglePath, ParseKaggleJsonPath results)
