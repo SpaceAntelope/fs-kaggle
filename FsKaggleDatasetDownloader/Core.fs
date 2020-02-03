@@ -76,8 +76,8 @@ module Core =
                     let isTimeToReport =
                         match reportOptions.SampleInterval with
                         | ByteCount interval when dataSinceLastSample >= interval -> true
-                        | Time interval when (timeOfLastSample - DateTime.Now) >= interval -> true
-                        | _ when isMoreToRead && dataSinceLastSample > 0L -> true
+                        | Time interval when (DateTime.Now - timeOfLastSample) >= interval -> true
+                        | _ when not isMoreToRead && dataSinceLastSample > 0L -> true
                         | _ -> false
 
                     if isTimeToReport then
