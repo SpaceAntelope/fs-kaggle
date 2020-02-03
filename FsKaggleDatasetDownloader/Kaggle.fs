@@ -15,15 +15,18 @@ module Kaggle =
 
     type AuthorizedClient = AuthorizedClient of HttpClient
 
+
     /// <summary>Deserialization of kaggle.json</summary>
     type Credentials() =
         member val username: string = null with get, set
         member val key: string = null with get, set
 
-        static member LoadFrom(path: string): Credentials =
+        static member LoadFromPath(path: string): Credentials =
             use reader = new StreamReader(path)
             let json = reader.ReadToEnd()
             JsonSerializer.Deserialize(json)
+
+        static member LoadFromString(source: string): Credentials = JsonSerializer.Deserialize(source)
 
         static member AuthorizeClient (client: HttpClient) (auth: Credentials) =
             let authToken =
@@ -35,6 +38,12 @@ module Kaggle =
 
             AuthorizedClient client
 
+    type CredentialsSource =
+        | Path of string
+        | Source of string
+        | Creds of Credentials
+        | Client of AuthorizedClient
+         
     type DatasetFile =
         | Filename of string
         | CompleteDatasetZipped
@@ -55,11 +64,12 @@ module Kaggle =
 
     type DownloadDatasetOptions =
         { DatasetInfo: DatasetInfo
-          AuthorizedClient: AuthorizedClient
+          Credentials: CredentialsSource
           DestinationFolder: string
           Overwrite: bool
           CancellationToken: CancellationToken option
           ReportingCallback: (ReportingData -> unit) option }
+
 
     let DownloadDatasetAsync(options: DownloadDatasetOptions) =
         let url = options.DatasetInfo.ToUrl()
@@ -72,7 +82,18 @@ module Kaggle =
             then File.Delete destinationFile
             else failwithf "File [%s] already exists." destinationFile
 
-        let (AuthorizedClient client) = options.AuthorizedClient
+        let authClient = 
+            match options.Credentials with
+            | Source str -> Credentials.LoadFromString str |> Credentials.AuthorizeClient (new HttpClient())
+            | Path path -> Credentials.LoadFromPath path |> Credentials.AuthorizeClient (new HttpClient())
+            | Creds creds -> creds |> Credentials.AuthorizeClient (new HttpClient())
+            | Client client -> client
 
-        DownloadFileAsync url destinationFile client (options.CancellationToken) (options.ReportingCallback)
-
+        async {
+            let (AuthorizedClient client) = authClient            
+            try 
+                do! DownloadFileAsync url destinationFile client (options.CancellationToken)
+                        (options.ReportingCallback)
+            finally 
+                client.Dispose()                
+        }

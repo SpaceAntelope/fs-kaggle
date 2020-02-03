@@ -23,7 +23,7 @@ module DatasetInfo =
 
 type DownloadDatasetOptions() =
     member val DatasetInfo: DatasetInfo = null with get, set
-    member val Client: HttpClient = null with get, set
+    member val KaggleJsonPath: string = null with get, set
     member val DestinationFolder: string = null with get, set
     member val Overwrite: bool = false with get, set
     member val CancellationToken: Nullable<CancellationToken> = Nullable() with get, set
@@ -32,7 +32,7 @@ type DownloadDatasetOptions() =
 module DownloadDatasetOptions =
     let convert (source: DownloadDatasetOptions): Kaggle.DownloadDatasetOptions =
         { DatasetInfo = source.DatasetInfo |> DatasetInfo.convert
-          AuthorizedClient = Kaggle.AuthorizedClient source.Client
+          Credentials = Kaggle.CredentialsSource.Path source.KaggleJsonPath
           DestinationFolder = source.DestinationFolder
           Overwrite = source.Overwrite
           CancellationToken =
@@ -50,4 +50,5 @@ module Kaggle =
     let DownloadDatasetAsync(options: DownloadDatasetOptions) =
         options
         |> DownloadDatasetOptions.convert
-        |> FsKaggleDatasetDownloader.Kaggle.DownloadDatasetAsync
+        |> Kaggle.DownloadDatasetAsync
+        |> Async.StartAsTask
