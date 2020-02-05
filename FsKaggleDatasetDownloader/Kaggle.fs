@@ -43,7 +43,7 @@ module Kaggle =
         | Source of string
         | Creds of Credentials
         | Client of AuthorizedClient
-         
+
     type DatasetFile =
         | Filename of string
         | CompleteDatasetZipped
@@ -73,8 +73,12 @@ module Kaggle =
 
     let DownloadDatasetAsync(options: DownloadDatasetOptions) =
         let url = options.DatasetInfo.ToUrl()
+
         let fileName =
-            options.DatasetInfo.Request.ToOption() |> Option.defaultValue (options.DatasetInfo.Dataset + ".zip")
+            options.DatasetInfo.Request.ToOption()
+            |> Option.map (fun filename -> Path.GetFileNameWithoutExtension(filename) + ".zip")
+            |> Option.defaultValue (options.DatasetInfo.Dataset + ".zip")
+
         let destinationFile = Path.Combine(options.DestinationFolder, fileName)
 
         if File.Exists destinationFile then
@@ -82,18 +86,18 @@ module Kaggle =
             then File.Delete destinationFile
             else failwithf "File [%s] already exists." destinationFile
 
-        let authClient = 
+        let authClient =
             match options.Credentials with
-            | Source str -> Credentials.LoadFromString str |> Credentials.AuthorizeClient (new HttpClient())
-            | Path path -> Credentials.LoadFromPath path |> Credentials.AuthorizeClient (new HttpClient())
-            | Creds creds -> creds |> Credentials.AuthorizeClient (new HttpClient())
+            | Source str -> Credentials.LoadFromString str |> Credentials.AuthorizeClient(new HttpClient())
+            | Path path -> Credentials.LoadFromPath path |> Credentials.AuthorizeClient(new HttpClient())
+            | Creds creds -> creds |> Credentials.AuthorizeClient(new HttpClient())
             | Client client -> client
 
         async {
-            let (AuthorizedClient client) = authClient            
-            try 
+            let (AuthorizedClient client) = authClient
+            try
                 do! DownloadFileAsync url destinationFile client (options.CancellationToken)
                         (options.ReportingCallback)
-            finally 
-                client.Dispose()                
+            finally
+                client.Dispose()
         }

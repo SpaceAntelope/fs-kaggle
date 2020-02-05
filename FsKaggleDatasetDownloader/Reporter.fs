@@ -9,15 +9,15 @@ module Reporter =
     let inline asMB (bytes: int64) = float bytes / (1024.0*1024.0)
     
     let ProgressBar (info : ReportingData) = 
-
+        let filename = Path.GetFileName(info.Notes).Replace("\\", "/")
         let status =
-            sprintf "[%s] %.02f of %.02fMB @ %.2fKB/s" (Path.GetFileName(info.Notes).Replace("\\", "/"))
+            sprintf "%.02f of %.02fMB @ %.2fKB/s" 
                 (asMB info.BytesRead) (asMB info.TotalBytes) (info.BytesPerSecond/1024.0)
 
         let percentage = float info.BytesRead / float info.TotalBytes
         let barTotalWidth = 
             try 
-                Console.WindowWidth - 11 - status.Length
+                Console.WindowWidth - 11 - status.Length - filename.Length
             with _ -> 
                 100 - status.Length
 
@@ -32,4 +32,4 @@ module Reporter =
                  * 100.00)
 
         // printf has issues with putting \r at the end on a jupyter notebook it seems
-        System.Console.Write(sprintf "[%s] %s\r" ((percentageStr.PadLeft(barCompleted, '|')).PadRight(barTotalWidth, ' ')) status)
+        System.Console.Write(sprintf "%s [%s] %s\r" filename ((percentageStr.PadLeft(barCompleted, '|')).PadRight(barTotalWidth, ' ')) status)

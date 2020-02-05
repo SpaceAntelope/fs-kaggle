@@ -9,10 +9,10 @@ open System.Threading.Tasks
 
 module Core =
     type ReportingData =
-        { Notes: string
+        { TimeStamp: DateTime
+          Notes: string
           BytesRead: int64
           TotalBytes: int64
-          TimeStamp : DateTime
           BytesPerSecond: float }
 
     type WriteAsyncCallback = array<byte> * int * int -> Task
@@ -97,8 +97,8 @@ module Core =
                 | None -> ()
         }
 
-    let DownloadFileAsync (url: string) destinationPath (client: HttpClient) (cancellationToken: CancellationToken option)
-        (report: ReportCallback option) =
+    let DownloadFileAsync (url: string) destinationPath (client: HttpClient)
+        (cancellationToken: CancellationToken option) (report: ReportCallback option) =
         let bufferLength = 8192
 
         async {
@@ -118,7 +118,5 @@ module Core =
                               { ReportTitle = Path.GetFileName(destinationPath)
                                 ReportCallback = callback
                                 SampleInterval = Time <| TimeSpan.FromMilliseconds(350.0) }) }
-                |> Async.AwaitTask                            
+                |> Async.AwaitTask
         }
-
-
