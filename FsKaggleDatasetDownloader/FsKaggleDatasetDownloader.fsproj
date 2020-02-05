@@ -6,6 +6,7 @@
     <Compile Include="Core.fs" />
     <Compile Include="Kaggle.fs" />
     <Compile Include="Interop.fs" />
+    <Compile Include="Reporter.fs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="4.7.0" />

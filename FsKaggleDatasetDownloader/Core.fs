@@ -12,6 +12,7 @@ module Core =
         { Notes: string
           BytesRead: int64
           TotalBytes: int64
+          TimeStamp : DateTime
           BytesPerSecond: float }
 
     type WriteAsyncCallback = array<byte> * int * int -> Task
@@ -87,6 +88,7 @@ module Core =
                         { Notes = reportOptions.ReportTitle
                           BytesRead = totalBytesRead
                           TotalBytes = total
+                          TimeStamp = DateTime.Now
                           BytesPerSecond = bytesPerSec }
                         |> reportOptions.ReportCallback
 
