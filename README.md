@@ -22,6 +22,7 @@ var options = new DatasetInfo { Owner = "dataset-owner", Dataset = "dataset-name
 // a specific file from the dataset to reduce the waiting.
 await Kaggle.DownloadDatasetAsync(options);    
 ```
+### Output:
 
     historical-hourly-weather-data.zip [||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||| 100.00%] 11.97 of 11.97MB @ 868.86KB/s
 
@@ -73,6 +74,7 @@ await Kaggle.DownloadDatasetAsync(
         Overwrite = true 
     });
 ```
+### Output:
 
     [|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||] 100% @ 1537.59KB/s 00:00
 
@@ -118,6 +120,8 @@ Chart.Plot(
         fill="tozeroy"
     })
 ```
+
+### Output:
 
 ![alt text](selfishPlot.png "Obligatory jupyter notebook data plot")
 
