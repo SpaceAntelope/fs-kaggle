@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsKaggleDatasetDownloader", "FsKaggleDatasetDownloader\FsKaggleDatasetDownloader.fsproj", "{56B08C89-0EAC-4563-BC6A-ABAEE13E2AFF}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsKaggle", "FsKaggle\FsKaggle.fsproj", "{56B08C89-0EAC-4563-BC6A-ABAEE13E2AFF}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsKaggleDatasetDownloader.CLI", "FsKaggleDatasetDownloader.CLI\FsKaggleDatasetDownloader.CLI.fsproj", "{B0C7E019-9617-4887-84BA-D8D78CE0FE01}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsKaggle.CLI", "FsKaggle.CLI\FsKaggle.CLI.fsproj", "{B0C7E019-9617-4887-84BA-D8D78CE0FE01}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsKaggleDatasetDownloader.Test", "FsKaggleDatasetDownloader.Test\FsKaggleDatasetDownloader.Test.fsproj", "{F0262619-836C-4EE4-8EDC-59251F30B116}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FsKaggle.Test", "FsKaggle.Test\FsKaggle.Test.fsproj", "{F0262619-836C-4EE4-8EDC-59251F30B116}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

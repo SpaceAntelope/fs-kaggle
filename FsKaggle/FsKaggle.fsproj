@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <Version>0.1.0</Version>
+    <Authors>Ares Lazarus Terzopoulos</Authors>
+    <Company>Ares Lazarus Terzopoulos</Company>
+    <Product>F# Kaggle</Product>
+    <Description>Minimalist jupyter-friendly tool for downloading complete datasets or individual files hosted on https://www.kaggle.com/, according to the kaggle API.</Description>
+    <Copyright>Ares Lazarus Terzopoulos 2020</Copyright>
+    <PackageProjectUrl>https://areslazarus.com/</PackageProjectUrl>
+    <PackageTags>fsharp, netcore, NET, kaggle, jupyter, machine-learning</PackageTags>
+    <NeutralLanguage>english</NeutralLanguage>
+    <RepositoryUrl>https://github.com/SpaceAntelope/fs-kaggle</RepositoryUrl>
+    <PackageId>fs-kaggle</PackageId>
+    <AssemblyName>fs-kaggle</AssemblyName>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReleaseNotes>First release.</PackageReleaseNotes>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Core.fs" />
+    <Compile Include="Kaggle.fs" />
+    <Compile Include="Interop.fs" />
+    <Compile Include="Reporter.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="4.7.0" />
+    <PackageReference Include="TaskBuilder.fs" Version="2.1.0" />
+  </ItemGroup>
+</Project>

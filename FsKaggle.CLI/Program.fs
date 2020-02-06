@@ -1,11 +1,9 @@
-﻿namespace FsKaggleDatasetDownloader.CLI
+﻿namespace FsKaggle.CLI
 
 module Program =
-    open System
     open System.IO
-    open System.Net.Http
-    open FsKaggleDatasetDownloader.Core
-    open FsKaggleDatasetDownloader.Kaggle
+    open FsKaggle
+    open FsKaggle.Kaggle
     open Argu
 
     let EnsureKaggleJsonExists path =
@@ -30,7 +28,7 @@ module Program =
     let main argv =
 
         let results =
-            ArgumentParser.Create<CLI.Args>(programName = "FsKaggleDatasetDownloader.CLI", errorHandler = CLI.arguErrorHandler)
+            ArgumentParser.Create<CLI.Args>(programName = "FsKaggle.CLI", errorHandler = CLI.arguErrorHandler)
                 .ParseCommandLine argv
 
         let kaggleJsonPath =

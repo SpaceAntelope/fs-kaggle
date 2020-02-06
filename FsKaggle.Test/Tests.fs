@@ -1,4 +1,4 @@
-namespace FsKaggleDatasetDownloader.Test
+namespace FsKaggle.Test
 
 open System
 open Xunit
@@ -6,9 +6,9 @@ open System.Net.Http
 open System.Net
 open System.IO
 open System.Threading
-open FsKaggleDatasetDownloader.Core
-open FsKaggleDatasetDownloader.Kaggle
-open FsKaggleDatasetDownloader.CLI
+open FsKaggle.Core
+open FsKaggle.Kaggle
+open FsKaggle.CLI
 open Xunit.Abstractions
 
 module Core =
@@ -68,12 +68,12 @@ module Core =
 
         use memstr = new MemoryStream()
 
-        let reportResult = ResizeArray<DateTime * ReportingData>()
+        let reportResult = ResizeArray<ReportingData>()
         let bufferSize = 128
         let sampleInterval = Time <| TimeSpan.FromMilliseconds(200.0)
 
         let report (info: ReportingData) =
-            reportResult.Add(DateTime.Now, info)
+            reportResult.Add(info)
 
         DownloadStreamAsync
             { BufferLength = bufferSize
@@ -96,7 +96,7 @@ module Core =
 
         let actualInterval =
             reportResult
-            |> Seq.map fst
+            |> Seq.map (fun report -> report.TimeStamp)
             |> Seq.pairwise
             |> Seq.averageBy (fun (x, y) -> (y - x).TotalMilliseconds)
 
@@ -215,7 +215,7 @@ module Kaggle =
 
         let credentialsPath = Path.GetTempFileName()
         let datasetZipPath = Path.Combine(Path.GetTempPath(), "TheDataset.zip")
-        let datasetFilePath = Path.Combine(Path.GetTempPath(), "samples.csv")
+        let datasetFilePath = Path.Combine(Path.GetTempPath(), "samples.zip")
 
         let clearFiles() =
             if File.Exists credentialsPath then File.Delete credentialsPath

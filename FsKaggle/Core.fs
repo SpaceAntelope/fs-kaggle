@@ -1,4 +1,4 @@
-namespace FsKaggleDatasetDownloader
+namespace FsKaggle
 
 open System.Net.Http
 open System.Threading

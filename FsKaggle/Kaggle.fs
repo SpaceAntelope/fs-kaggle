@@ -1,8 +1,8 @@
-namespace FsKaggleDatasetDownloader
+namespace FsKaggle
 
 open System.Threading
 open System.IO
-open FsKaggleDatasetDownloader.Core
+open FsKaggle.Core
 open System.Net.Http
 open System.Net.Http.Headers
 open System.Text.Json

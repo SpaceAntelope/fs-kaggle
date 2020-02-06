@@ -1,9 +1,9 @@
-namespace FsKaggleDatasetDownloader.CLI
+namespace FsKaggle.CLI
 
 open Argu
 open System
 open System.IO
-open FsKaggleDatasetDownloader.Kaggle
+open FsKaggle.Kaggle
 
 module CLI =
 
@@ -16,14 +16,14 @@ module CLI =
 
         printfn "EXAMPLES:"
         printfn "\tDownload the entire dataset from https://www.kaggle.com/selfishgene/historical-hourly-weather-data :"
-        printex "\tFsKaggleDatasetDownloader.CLI selfishgene historical-hourly-weather-data"
+        printex "\tFsKaggle.CLI selfishgene historical-hourly-weather-data"
         printfn "\tOnly download the file humidity.csv from within the dataset:"
-        printex "\tFsKaggleDatasetDownloader.CLI selfishgene historical-hourly-weather-data -f humidity.csv"
+        printex "\tFsKaggle.CLI selfishgene historical-hourly-weather-data -f humidity.csv"
         printfn "\tDownload said file in a Data folder in your user directory:"
-        printex "\tFsKaggleDatasetDownloader.CLI selfishgene historical-hourly-weather-data -f humidity.csv -o Data"
+        printex "\tFsKaggle.CLI selfishgene historical-hourly-weather-data -f humidity.csv -o Data"
         printfn "\tLook for the kaggle API token in a kaggle.json file within the same directory:"
         printex
-            "\tFsKaggleDatasetDownloader.CLI selfishgene historical-hourly-weather-data -f humidity.csv -o Data -c kaggle.json"
+            "\tFsKaggle.CLI selfishgene historical-hourly-weather-data -f humidity.csv -o Data -c kaggle.json"
 
 
     let arguErrorHandler =

@@ -1,9 +1,9 @@
-namespace FsKaggleDatasetDownloader.Interop
+namespace FsKaggle.Interop
 
 open System
 open System.Threading
-open FsKaggleDatasetDownloader.Core
-open FsKaggleDatasetDownloader
+open FsKaggle.Core
+open FsKaggle
 open System.Net.Http
 
 [<AllowNullLiteral>]

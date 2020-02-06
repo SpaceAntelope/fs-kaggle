@@ -1,8 +1,8 @@
-namespace FsKaggleDatasetDownloader
+namespace FsKaggle
 
 open System
 open System.IO
-open FsKaggleDatasetDownloader.Core
+open FsKaggle.Core
 
 module Reporter =
 

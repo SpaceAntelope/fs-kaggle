@@ -21,8 +21,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FsKaggleDatasetDownloader\FsKaggleDatasetDownloader.fsproj" />
-    <ProjectReference Include="..\FsKaggleDatasetDownloader.CLI\FsKaggleDatasetDownloader.CLI.fsproj" />
+    <ProjectReference Include="..\FsKaggle\FsKaggle.fsproj" />
+    <ProjectReference Include="..\FsKaggle.CLI\FsKaggle.CLI.fsproj" />
   </ItemGroup>
 
 </Project>
