@@ -53,7 +53,7 @@ module Program =
               Overwrite = overwriteEnabled
               CancellationToken = None
               ReportingCallback = Some Reporter.ProgressBar }
-            |> DownloadDatasetAsync
+            |> Kaggle.DownloadDatasetAsync
             |> Async.RunSynchronously
 
             0 // return an integer exit code

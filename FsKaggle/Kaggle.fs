@@ -2,7 +2,7 @@ namespace FsKaggle
 
 open System.Threading
 open System.IO
-open FsKaggle.Core
+open FsKaggle.Common
 open System.Net.Http
 open System.Net.Http.Headers
 open System.Text.Json
@@ -68,10 +68,20 @@ module Kaggle =
           DestinationFolder: string
           Overwrite: bool
           CancellationToken: CancellationToken option
-          ReportingCallback: (ReportingData -> unit) option }
+          ReportingCallback: (ProgressData -> unit) option }
+        static member Default datasetInfo = {
+            DatasetInfo = datasetInfo
+            Credentials = Path defaultKaggleJsonPath
+            DestinationFolder = "."
+            Overwrite = false
+            CancellationToken = None
+            ReportingCallback = Some Reporter.ProgressBar
+        }
 
-
-    let DownloadDatasetAsync(options: DownloadDatasetOptions) =
+open Kaggle
+[<Sealed>]
+type Kaggle private () =
+    static member DownloadDatasetAsync(options: DownloadDatasetOptions) =
         let url = options.DatasetInfo.ToUrl()
 
         let fileName =
@@ -101,3 +111,8 @@ module Kaggle =
             finally
                 client.Dispose()
         }
+    
+    static member DownloadDatasetAsync(options: DatasetInfo) =
+        options
+        |> DownloadDatasetOptions.Default
+        |> Kaggle.DownloadDatasetAsync

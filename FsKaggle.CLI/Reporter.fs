@@ -6,7 +6,7 @@ open FsKaggle.Core
 
 module Reporter =
 
-    let ProgressBar (info : ReportingData) = 
+    let ProgressBar (info : ProgressData) = 
         let status =
             sprintf "Downloading file [%s] -- %dKB of %.02fMB received at %.2fKB/s" (Path.GetFileName(info.Notes).Replace("\\", "/"))
                 info.BytesRead (float info.TotalBytes / 1024.0 / 1024.0) (info.BytesPerSecond/1024.0)

@@ -6,12 +6,14 @@ open System.Net.Http
 open System.Net
 open System.IO
 open System.Threading
-open FsKaggle.Core
+open FsKaggle.Common
 open FsKaggle.Kaggle
 open FsKaggle.CLI
+open FsKaggle
 open Xunit.Abstractions
 
-module Core =
+
+module Common =
 
     [<Fact>]
     let ``DownloadStreamAsync Test Progress Reporting with 10MB``() =
@@ -28,12 +30,12 @@ module Core =
         use client = new HttpClient(mockHandler)
         use memstr = new MemoryStream()
 
-        let reportResult = ResizeArray<ReportingData>()
+        let reportResult = ResizeArray<ProgressData>()
         let desiredSamples = 64
         let bufferSize = payloadSize / desiredSamples
         let sampleInterval = ByteCount <| int64 bufferSize
 
-        let report (info: ReportingData) = reportResult.Add info
+        let report (info: ProgressData) = reportResult.Add info
 
         DownloadStreamAsync
             { BufferLength = bufferSize
@@ -68,11 +70,11 @@ module Core =
 
         use memstr = new MemoryStream()
 
-        let reportResult = ResizeArray<ReportingData>()
+        let reportResult = ResizeArray<ProgressData>()
         let bufferSize = 128
         let sampleInterval = Time <| TimeSpan.FromMilliseconds(200.0)
 
-        let report (info: ReportingData) =
+        let report (info: ProgressData) =
             reportResult.Add(info)
 
         DownloadStreamAsync
@@ -100,7 +102,7 @@ module Core =
             |> Seq.pairwise
             |> Seq.averageBy (fun (x, y) -> (y - x).TotalMilliseconds)
 
-        Assert.True(Math.Abs(actualInterval - expectedInterval) < 5.0)
+        Assert.True(Math.Abs(actualInterval - expectedInterval)/expectedInterval < 0.05)
 
     type DownloadFileTest(outputHelper: ITestOutputHelper) =
         let output = outputHelper
@@ -244,7 +246,7 @@ module Kaggle =
 
             Filename "samples.csv"
             |> datasetOptions (AuthorizedClient client)
-            |> DownloadDatasetAsync
+            |> Kaggle.DownloadDatasetAsync
             |> Async.RunSynchronously
 
             let fileInfo = FileInfo datasetFilePath
@@ -257,7 +259,7 @@ module Kaggle =
 
             CompleteDatasetZipped
             |> datasetOptions (AuthorizedClient client)
-            |> DownloadDatasetAsync
+            |> Kaggle.DownloadDatasetAsync
             |> Async.RunSynchronously
 
             let fileInfo = FileInfo datasetZipPath

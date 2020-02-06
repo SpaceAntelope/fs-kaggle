@@ -7,35 +7,9 @@ open System
 open FSharp.Control.Tasks.V2
 open System.Threading.Tasks
 
-module Core =
-    type ReportingData =
-        { TimeStamp: DateTime
-          Notes: string
-          BytesRead: int64
-          TotalBytes: int64
-          BytesPerSecond: float }
-
-    type WriteAsyncCallback = array<byte> * int * int -> Task
-
-    type ReportCallback = ReportingData -> unit
-
-    type SampleInterval =
-        | ByteCount of int64
-        | Time of TimeSpan
-
-    type ReportOptions =
-        { ReportTitle: string
-          ReportCallback: ReportCallback
-          SampleInterval: SampleInterval }
-
-    type DownloadOptions =
-        { Url: string
-          Client: HttpClient
-          Token: CancellationToken option
-          BufferLength: int
-
-          WriteAsync: WriteAsyncCallback
-          ReportOptions: ReportOptions option }
+module Common =
+    let defaultKaggleJsonPath =
+        Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".kaggle/kaggle.json")
 
     let DownloadStreamAsync(options: DownloadOptions) =
         let cancellationToken = options.Token |> Option.defaultValue (CancellationToken())

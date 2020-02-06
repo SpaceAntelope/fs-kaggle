@@ -5,23 +5,21 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Version>0.1.0</Version>
     <Authors>Ares Lazarus Terzopoulos</Authors>
-    <Company>Ares Lazarus Terzopoulos</Company>
+    <Company>AresLazarus</Company>
     <Product>F# Kaggle CLI</Product>
-    <Description>Command line tool for the fs-kaggle library, a minimalist jupyter-friendly tool for downloading complete datasets or individual files hosted on https://www.kaggle.com/, according to the kaggle API.</Description>
+    <Description>Command line tool for the fs-kaggle library, a minimalist jupyter-friendly tool for downloading complete datasets or individual csv files hosted on https://www.kaggle.com/, according to the kaggle API.</Description>
     <Copyright>Ares Lazarus Terzopoulos 2020</Copyright>
     <PackageProjectUrl>https://areslazarus.com/</PackageProjectUrl>
     <PackageTags>fsharp, netcore, NET, kaggle, jupyter, machine-learning, CLI, dotnet-tool</PackageTags>
     <NeutralLanguage>english</NeutralLanguage>
     <RepositoryUrl>https://github.com/SpaceAntelope/fs-kaggle</RepositoryUrl>
-    <PackageId>fs-kaggle-cli</PackageId>
-    <AssemblyName>fs-kaggle-cli</AssemblyName>
+    <PackageId>AresLazarus.FsKaggle.CLI</PackageId>
+    <AssemblyName>FsKaggle.CLI</AssemblyName>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>First release.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- <Compile Include="Reporter.fs" />
- -->
     <Compile Include="CLI.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

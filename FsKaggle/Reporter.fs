@@ -2,13 +2,12 @@ namespace FsKaggle
 
 open System
 open System.IO
-open FsKaggle.Core
 
 module Reporter =
 
     let inline asMB (bytes: int64) = float bytes / (1024.0*1024.0)
     
-    let ProgressBar (info : ReportingData) = 
+    let ProgressBar (info : ProgressData) = 
         let filename = Path.GetFileName(info.Notes).Replace("\\", "/")
         let status =
             sprintf "%.02f of %.02fMB @ %.2fKB/s" 
