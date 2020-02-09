@@ -11,6 +11,8 @@ open FsKaggle.Kaggle
 open FsKaggle.CLI
 open FsKaggle
 open Xunit.Abstractions
+open FsUnit
+open FsUnit.Xunit
 
 
 module Common =
@@ -102,7 +104,11 @@ module Common =
             |> Seq.pairwise
             |> Seq.averageBy (fun (x, y) -> (y - x).TotalMilliseconds)
 
-        Assert.True(Math.Abs(actualInterval - expectedInterval)/expectedInterval < 0.05)
+        let errorTolerance = 0.1*expectedInterval
+        
+        actualInterval |> should (equalWithin errorTolerance) expectedInterval
+
+        //Assert.True(Math.Abs(actualInterval - expectedInterval)/expectedInterval < 0.05)
 
     type DownloadFileTest(outputHelper: ITestOutputHelper) =
         let output = outputHelper
