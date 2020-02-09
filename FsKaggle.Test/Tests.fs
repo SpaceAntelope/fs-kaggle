@@ -11,7 +11,6 @@ open FsKaggle.Kaggle
 open FsKaggle.CLI
 open FsKaggle
 open Xunit.Abstractions
-open FsUnit
 open FsUnit.Xunit
 
 
@@ -74,7 +73,8 @@ module Common =
 
         let reportResult = ResizeArray<ProgressData>()
         let bufferSize = 128
-        let sampleInterval = Time <| TimeSpan.FromMilliseconds(200.0)
+        let expectedInterval = 200.0
+        let sampleInterval = Time <| TimeSpan.FromMilliseconds(expectedInterval)
 
         let report (info: ProgressData) =
             reportResult.Add(info)
@@ -93,10 +93,8 @@ module Common =
         |> Async.AwaitTask
         |> Async.RunSynchronously
 
-        Assert.Equal(int64 payloadSize, memstr.Length)
-        Assert.True(reportResult.Count > 1)
-
-        let expectedInterval = 200.0
+        int64 payloadSize  |> should equal memstr.Length
+        reportResult.Count |> should be (greaterThan 1)
 
         let actualInterval =
             reportResult
@@ -104,11 +102,9 @@ module Common =
             |> Seq.pairwise
             |> Seq.averageBy (fun (x, y) -> (y - x).TotalMilliseconds)
 
-        let errorTolerance = 0.1*expectedInterval
-        
-        actualInterval |> should (equalWithin errorTolerance) expectedInterval
+        let errorTolerance = 0.15*expectedInterval
 
-        //Assert.True(Math.Abs(actualInterval - expectedInterval)/expectedInterval < 0.05)
+        actualInterval |> should (equalWithin errorTolerance) expectedInterval
 
     type DownloadFileTest(outputHelper: ITestOutputHelper) =
         let output = outputHelper
