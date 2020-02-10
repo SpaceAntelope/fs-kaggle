@@ -3,7 +3,7 @@ namespace FsKaggle.CLI
 open Argu
 open System
 open System.IO
-open FsKaggle.Kaggle
+open FsKaggle
 
 module CLI =
 
@@ -63,7 +63,7 @@ module CLI =
         let downloadMode =
             match results.TryGetResult Args.File with
             | Some file -> DatasetFile.Filename file
-            | None -> DatasetFile.CompleteDatasetZipped
+            | None -> DatasetFile.All
 
         { Owner = owner
           Dataset = dataset

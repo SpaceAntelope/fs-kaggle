@@ -3,7 +3,7 @@
 module Program =
     open System.IO
     open FsKaggle
-    open FsKaggle.Kaggle
+    open FsKaggle
     open Argu
 
     let EnsureKaggleJsonExists path =

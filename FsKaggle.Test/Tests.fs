@@ -7,7 +7,6 @@ open System.Net
 open System.IO
 open System.Threading
 open FsKaggle.Common
-open FsKaggle.Kaggle
 open FsKaggle.CLI
 open FsKaggle
 open Xunit.Abstractions
@@ -259,7 +258,7 @@ module Kaggle =
         member x.``Download full dataset from Kaggle API``() =
             use client = new HttpClient(handler)
 
-            CompleteDatasetZipped
+            DatasetFile.All
             |> datasetOptions (AuthorizedClient client)
             |> Kaggle.DownloadDatasetAsync
             |> Async.RunSynchronously
@@ -286,7 +285,7 @@ module CLI =
         let expected =
             { Owner = args.[0]
               Dataset = args.[1]
-              Request = CompleteDatasetZipped }
+              Request = All }
 
         let actual = ParseDatasetInfo results
 

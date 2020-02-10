@@ -8,79 +8,88 @@ open System.Net.Http.Headers
 open System.Text.Json
 open System
 
-module Kaggle =
+//module Kaggle =
 
-    module Constants =
-        let BaseApiUrl = "https://www.kaggle.com/api/v1/"
+module Constants =
+    let BaseApiUrl = "https://www.kaggle.com/api/v1/"
 
-    type AuthorizedClient = AuthorizedClient of HttpClient
+type AuthorizedClient = AuthorizedClient of HttpClient
 
 
-    /// <summary>Deserialization of kaggle.json</summary>
-    type Credentials() =
-        member val username: string = null with get, set
-        member val key: string = null with get, set
+/// <summary>Deserialization of kaggle.json</summary>
+type Credentials() =
+    member val username: string = null with get, set
+    member val key: string = null with get, set
 
-        static member LoadFromPath(path: string): Credentials =
-            use reader = new StreamReader(path)
-            let json = reader.ReadToEnd()
-            JsonSerializer.Deserialize(json)
+    static member LoadFromPath(path: string): Credentials =
+        use reader = new StreamReader(path)
+        let json = reader.ReadToEnd()
+        JsonSerializer.Deserialize(json)
 
-        static member LoadFromString(source: string): Credentials = JsonSerializer.Deserialize(source)
+    static member LoadFromString(source: string): Credentials = JsonSerializer.Deserialize(source)
 
-        static member AuthorizeClient (client: HttpClient) (auth: Credentials) =
-            let authToken =
-                sprintf "%s:%s" auth.username auth.key
-                |> Text.ASCIIEncoding.ASCII.GetBytes
-                |> Convert.ToBase64String
+    static member AuthorizeClient (client: HttpClient) (auth: Credentials) =
+        let authToken =
+            sprintf "%s:%s" auth.username auth.key
+            |> Text.ASCIIEncoding.ASCII.GetBytes
+            |> Convert.ToBase64String
 
-            client.DefaultRequestHeaders.Authorization <- AuthenticationHeaderValue("Basic", authToken)
+        client.DefaultRequestHeaders.Authorization <- AuthenticationHeaderValue("Basic", authToken)
 
-            AuthorizedClient client
+        AuthorizedClient client
 
-    type CredentialsSource =
-        | Path of string
-        | Source of string
-        | Creds of Credentials
-        | Client of AuthorizedClient
+type CredentialsSource =
+    | Path of string
+    | Source of string
+    | Creds of Credentials
+    | Client of AuthorizedClient
 
-    type DatasetFile =
-        | Filename of string
-        | CompleteDatasetZipped
-        member x.ToOption() =
-            match x with
-            | Filename filename -> Some filename
-            | _ -> None
+type DatasetFile =
+    | Filename of string
+    | All
+    member x.ToOption() =
+        match x with
+        | Filename filename -> Some filename
+        | _ -> None
 
-    type DatasetInfo =
-        { Owner: string
-          Dataset: string
-          Request: DatasetFile }
-        member x.ToUrl() =
-            match x.Request with
-            | Filename filename ->
-                sprintf "%sdatasets/download/%s/%s/%s" Constants.BaseApiUrl x.Owner x.Dataset filename
-            | CompleteDatasetZipped -> sprintf "%sdatasets/download/%s/%s" Constants.BaseApiUrl x.Owner x.Dataset
+type DatasetInfo =
+    { Owner: string
+      Dataset: string
+      Request: DatasetFile }
 
-    type DownloadDatasetOptions =
-        { DatasetInfo: DatasetInfo
-          Credentials: CredentialsSource
-          DestinationFolder: string
-          Overwrite: bool
-          CancellationToken: CancellationToken option
-          ReportingCallback: (ProgressData -> unit) option }
-        static member Default datasetInfo = {
-            DatasetInfo = datasetInfo
-            Credentials = Path defaultKaggleJsonPath
-            DestinationFolder = "."
-            Overwrite = false
-            CancellationToken = None
-            ReportingCallback = Some Reporter.ProgressBar
-        }
+    member x.ToUrl() =
+        match x.Request with
+        | Filename filename ->
+            sprintf "%sdatasets/download/%s/%s/%s" Constants.BaseApiUrl x.Owner x.Dataset filename
+        | All -> sprintf "%sdatasets/download/%s/%s" Constants.BaseApiUrl x.Owner x.Dataset
 
-open Kaggle
+    member x.Extended() =
+        { DatasetInfo = x
+          Credentials = Path defaultKaggleJsonPath
+          DestinationFolder = "."
+          Overwrite = false
+          CancellationToken = None
+          ReportingCallback = Some Reporter.ProgressBar }
+
+and DownloadDatasetOptions =
+    { DatasetInfo: DatasetInfo
+      Credentials: CredentialsSource
+      DestinationFolder: string
+      Overwrite: bool
+      CancellationToken: CancellationToken option
+      ReportingCallback: (ProgressData -> unit) option }
+    static member Default datasetInfo =
+        { DatasetInfo = datasetInfo
+          Credentials = Path defaultKaggleJsonPath
+          DestinationFolder = "."
+          Overwrite = false
+          CancellationToken = None
+          ReportingCallback = Some Reporter.ProgressBar }
+
+//open Kaggle
 [<Sealed>]
 type Kaggle private () =
+
     static member DownloadDatasetAsync(options: DownloadDatasetOptions) =
         let url = options.DatasetInfo.ToUrl()
 
@@ -111,7 +120,7 @@ type Kaggle private () =
             finally
                 client.Dispose()
         }
-    
+
     static member DownloadDatasetAsync(options: DatasetInfo) =
         options
         |> DownloadDatasetOptions.Default
