@@ -31,7 +31,7 @@ var options =
         Owner = "dataset-owner", 
         Dataset = "dataset-name", 
         Request="dataset-file.csv" 
-        /* Use Request = null to get the full dataset */
+        /* Use Request = null (or just don't set it) to get the full dataset */
     };
 
 await  Kaggle.DownloadDatasetAsync(options);
