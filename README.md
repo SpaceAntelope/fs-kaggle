@@ -14,7 +14,7 @@ If you're already setup with a kaggle account and the <code>kaggle.json</code> f
 <div class="alert alert-info" style="display:flex; align-items: center"><i class="fa fa-exclamation-triangle fa-2x" style="margin: .3em"></i> <span>You need to use the <code>FsKaggle.Interop</code> namespace to access the C# API, assuming you don't want to have to work around algebraic types and other F# dark magic.</span></div>
 
 ## CLI
-Use `fskaggle --help` to see all available options and `fskaggle -x` to get the full list of examples.
+Use `fskaggle --help` to see all available options and `fskaggle -x` to get a list of examples.
 ```bash
 fskaggle dataset-owner dataset-name -f dataset-file.csv
 ```
