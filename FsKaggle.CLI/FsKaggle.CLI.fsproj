@@ -4,19 +4,24 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <Version>0.1.0</Version>
+
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>fskaggle</ToolCommandName>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+
     <Authors>Ares Lazarus Terzopoulos</Authors>
     <Company>AresLazarus</Company>
     <Product>F# Kaggle CLI</Product>
-    <Description>Command line tool for the fs-kaggle library, a minimalist jupyter-friendly tool for downloading complete datasets or individual csv files hosted on https://www.kaggle.com/, according to the kaggle API.</Description>
+    <Description>Command line tool for the FsKaggle library, a minimalist jupyter-friendly tool for effortless downloading of complete datasets or individual csv files hosted on https://www.kaggle.com/, according to the kaggle API.</Description>
     <Copyright>Ares Lazarus Terzopoulos 2020</Copyright>
     <PackageProjectUrl>https://areslazarus.com/</PackageProjectUrl>
     <PackageTags>fsharp, netcore, NET, kaggle, jupyter, machine-learning, CLI, dotnet-tool</PackageTags>
     <NeutralLanguage>english</NeutralLanguage>
     <RepositoryUrl>https://github.com/SpaceAntelope/fs-kaggle</RepositoryUrl>
-    <PackageId>AresLazarus.FsKaggle.CLI</PackageId>
+    <PackageId>FsKaggle.CLI</PackageId>
     <AssemblyName>FsKaggle.CLI</AssemblyName>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReleaseNotes>First release.</PackageReleaseNotes>
+    <PackageReleaseNotes>You can also get this tool as a library at https://www.nuget.org/packages/AresLazarus.FsKaggle/</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -30,6 +35,7 @@
 
   <ItemGroup>
     <PackageReference Include="Argu" Version="6.0.0" />
+    <!-- <PackageReference Include="AresLazarus.FsKaggle" Version="0.1.0" /> -->
   </ItemGroup>
 
 </Project>

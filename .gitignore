@@ -18,3 +18,4 @@ Notebooks/fsx/.paket/load
 */*.fsproj.user
 *.trx
 .ipynb_checkpoints/*
+*/nupkg/*
