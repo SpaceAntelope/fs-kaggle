@@ -19,3 +19,4 @@ Notebooks/fsx/.paket/load
 *.trx
 .ipynb_checkpoints/*
 */nupkg/*
+nupkg/*

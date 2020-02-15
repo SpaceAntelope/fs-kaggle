@@ -7,7 +7,7 @@
 
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>fskaggle</ToolCommandName>
-    <PackageOutputPath>./nupkg</PackageOutputPath>
+    <PackageOutputPath>../nupkg</PackageOutputPath>
 
     <Authors>Ares Lazarus Terzopoulos</Authors>
     <Company>AresLazarus</Company>
@@ -21,7 +21,7 @@
     <PackageId>FsKaggle.CLI</PackageId>
     <AssemblyName>FsKaggle.CLI</AssemblyName>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReleaseNotes>You can also get this tool as a library at https://www.nuget.org/packages/AresLazarus.FsKaggle/</PackageReleaseNotes>
+    <PackageReleaseNotes>You can also get this tool as a library at https://www.nuget.org/packages/FsKaggle/</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

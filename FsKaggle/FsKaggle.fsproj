@@ -14,10 +14,11 @@
     <PackageTags>fsharp, netcore, NET, kaggle, jupyter, machine-learning</PackageTags>
     <NeutralLanguage>english</NeutralLanguage>
     <RepositoryUrl>https://github.com/SpaceAntelope/fs-kaggle</RepositoryUrl>
-    <PackageId>AresLazarus.FsKaggle</PackageId>
+    <PackageId>FsKaggle</PackageId>
     <AssemblyName>FsKaggle</AssemblyName>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReleaseNotes>First release.</PackageReleaseNotes>
+    <PackageReleaseNotes>CLI tool available at https://www.nuget.org/packages/FsKaggle.CLI/</PackageReleaseNotes>
+    <PackageOutputPath>../nupkg</PackageOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Types.fs" />
