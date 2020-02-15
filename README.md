@@ -1,4 +1,4 @@
-![Nuget](https://img.shields.io/nuget/v/AresLazarus.FsKaggle)
+[![Nuget](https://img.shields.io/nuget/v/AresLazarus.FsKaggle)](https://www.nuget.org/packages/AresLazarus.FsKaggle/)
 
 # fs-kaggle
 Minimalist jupyter-friendly Kaggle dataset downloader written if F#. Includes CLI and allows progress report customization.
