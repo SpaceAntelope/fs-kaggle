@@ -5,7 +5,7 @@ Minimalist jupyter-friendly Kaggle dataset downloader written if F#. Includes CL
 # Installation
 |Project|NuGet|dotnet cli|jupyter notebook|
 | ------------- |:-------------:| ----- | --- |
-| FsKaggle      | [![Nuget](https://img.shields.io/nuget/v/AresLazarus.FsKaggle)](https://www.nuget.org/packages/FsKaggle/)|`dotnet add package FsKaggle`|`#r "nuget:FsKaggle"`|
+| FsKaggle      | [![Nuget](https://img.shields.io/nuget/v/FsKaggle)](https://www.nuget.org/packages/FsKaggle/)|`dotnet add package FsKaggle`|`#r "nuget:FsKaggle"`|
 | FsKaggle.CLI  | [![Nuget](https://img.shields.io/nuget/v/FsKaggle.CLI)](https://www.nuget.org/packages/FsKaggle.CLI/)| `dotnet tool install -g FsKaggle.CLI` ||
 
 # Quickstart
