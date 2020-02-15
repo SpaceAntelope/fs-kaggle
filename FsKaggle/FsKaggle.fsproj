@@ -8,7 +8,7 @@
     <Authors>Ares Lazarus Terzopoulos</Authors>
     <Company>AresLazarus</Company>
     <Product>F# Kaggle</Product>
-    <Description>Minimalist jupyter-friendly tool for downloading complete datasets or individual files hosted on https://www.kaggle.com/, according to the kaggle API.</Description>
+    <Description>Minimalist jupyter-friendly tool for effort-free downloading of complete datasets or individual files hosted on https://www.kaggle.com/, according to the kaggle API.</Description>
     <Copyright>Ares Lazarus Terzopoulos 2020</Copyright>
     <PackageProjectUrl>https://areslazarus.com/</PackageProjectUrl>
     <PackageTags>fsharp, netcore, NET, kaggle, jupyter, machine-learning</PackageTags>
