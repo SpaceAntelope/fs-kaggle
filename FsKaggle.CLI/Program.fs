@@ -26,34 +26,35 @@ module Program =
 
     [<EntryPoint>]
     let main argv =
+        let parser = ArgumentParser.Create<CLI.Args>(programName = "FsKaggle.CLI", errorHandler = CLI.arguErrorHandler)
+        let results = parser.ParseCommandLine argv
 
-        let results =
-            ArgumentParser.Create<CLI.Args>(programName = "FsKaggle.CLI", errorHandler = CLI.arguErrorHandler)
-                .ParseCommandLine argv
-
-        let kaggleJsonPath =
-            results
-            |> CLI.ParseKaggleJsonPath
-            |> EnsureKaggleJsonExists
-        let destinationFolder =
-            results
-            |> CLI.ParseOutputFolder
-            |> CreateOutputFolderIfMissing
-
-        let datasetInfo = results |> CLI.ParseDatasetInfo
-        let overwriteEnabled = results |> CLI.ParseOverwrite
-        let whatIfEnabled = results |> CLI.ParseWhatIf
-
-        if whatIfEnabled then
+        match results.TryGetResult(CLI.Args.Examples) with
+        | Some _ ->
+            CLI.PrintExamples()
             0
-        else
-            { DatasetInfo = datasetInfo
-              Credentials = Path kaggleJsonPath
-              DestinationFolder = destinationFolder
-              Overwrite = overwriteEnabled
-              CancellationToken = None
-              ReportingCallback = Some Reporter.ProgressBar }
-            |> Kaggle.DownloadDatasetAsync
-            |> Async.RunSynchronously
+        | None ->
+            let kaggleJsonPath =
+                results
+                |> CLI.ParseKaggleJsonPath
+                |> EnsureKaggleJsonExists
+            let destinationFolder =
+                results
+                |> CLI.ParseOutputFolder
+                |> CreateOutputFolderIfMissing
+
+            let datasetInfo = results |> CLI.ParseDatasetInfo
+            let overwriteEnabled = results |> CLI.ParseOverwrite
+            let whatIfEnabled = results |> CLI.ParseWhatIf
+
+            if not whatIfEnabled then
+                { DatasetInfo = datasetInfo
+                  Credentials = Path kaggleJsonPath
+                  DestinationFolder = destinationFolder
+                  Overwrite = overwriteEnabled
+                  CancellationToken = None
+                  ReportingCallback = Some Reporter.ProgressBar }
+                |> Kaggle.DownloadDatasetAsync
+                |> Async.RunSynchronously
 
             0 // return an integer exit code

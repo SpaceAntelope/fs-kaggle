@@ -11,20 +11,22 @@ module CLI =
         let printex example =
             let current = Console.ForegroundColor
             Console.ForegroundColor <- ConsoleColor.Green
-            printfn "\t\t%s\n" example
+            printfn "    %s\n" example
             Console.ForegroundColor <- current
 
+        printfn "If you are not using this CLI as a dotnet tool, remember to substitute \"fskaggle\" with the name of your executable."
+        printfn ""
         printfn "EXAMPLES:"
-        printfn "\tDownload the entire dataset from https://www.kaggle.com/selfishgene/historical-hourly-weather-data :"
-        printex "\tFsKaggle.CLI selfishgene historical-hourly-weather-data"
-        printfn "\tOnly download the file humidity.csv from within the dataset:"
-        printex "\tFsKaggle.CLI selfishgene historical-hourly-weather-data -f humidity.csv"
-        printfn "\tDownload said file in a Data folder in your user directory:"
-        printex "\tFsKaggle.CLI selfishgene historical-hourly-weather-data -f humidity.csv -o Data"
-        printfn "\tLook for the kaggle API token in a kaggle.json file within the same directory:"
+        printfn ""
+        printfn "    Download the entire dataset from https://www.kaggle.com/dataset-owner/dataset-name :"
+        printex "    fskaggle dataset-owner dataset-name"
+        printfn "    Only download the file file.csv from within the dataset:"
+        printex "    fskaggle dataset-owner dataset-name -f file.csv"
+        printfn "    Download file in ./Data:"
+        printex "    fskaggle dataset-owner dataset-name -f file.csv -o Data"
+        printfn "    Same, but with the kaggle API token in a kaggle.json file within the same directory and also overwrite any existing files:"
         printex
-            "\tFsKaggle.CLI selfishgene historical-hourly-weather-data -f humidity.csv -o Data -c kaggle.json"
-
+            "    fskaggle dataset-owner dataset-name -f file.csv -o Data -c kaggle.json --overwrite"
 
     let arguErrorHandler =
         ProcessExiter
@@ -38,17 +40,17 @@ module CLI =
     [<NoAppSettings>]
     type Args =
         | [<Unique; AltCommandLine("-c")>] Credentials of string
-        | [<Unique; MainCommand; AltCommandLine("-ds")>] Dataset of Owner: string * Name: string
+        | [<Unique; MainCommand>] Dataset of Owner: string * Name: string
         | [<Unique; AltCommandLine("-o")>] Output of string
         | [<Unique; AltCommandLine("-f")>] File of string
         | [<Unique>] Overwrite
         | [<Unique>] WhatIf
-        //| [<Unique;AltCommandLine("-ex")>] Examples
+        | [<Unique;AltCommandLine("-x");AltCommandLine("-ex")>] Examples
         interface IArgParserTemplate with
             member arg.Usage =
                 match arg with
                 | Credentials _ -> "Path to credentials file, normally kaggle.json. Defaults to ~/.kaggle/kaggle.json"
-                //| Examples _ -> "Show usage examples."
+                | Examples _ -> "Show usage examples."
                 | Dataset _ -> "The name of the dataset and the kaggle user under whom it is published."
                 | Output _ ->
                     "The folder to download the dataset in. If missing we'll attempt to create it. Default is current folder."
